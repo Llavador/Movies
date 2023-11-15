@@ -4,6 +4,9 @@ import com.fpmislata.movies.domain.entity.Director;
 
 public interface DirectorService {
 
-    void create(Director director);
+    int create(Director director);
     
+    void update(int id, Director director);
+    
+    void delete(int id);
 }

@@ -22,5 +22,5 @@ public class Director {
         this.name = name;
         this.birthYear = birthYear;
         this.deathYear = deathYear;
-    } 
+    }
 }
