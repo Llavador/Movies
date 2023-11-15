@@ -15,10 +15,14 @@ public class MovieServiceImpl implements MovieService {
  
     @Autowired
     private MovieRepository movieRepository;
- 
+
+    @Override
+    public List<Movie> getAll(Integer page, Integer pageSize) {
+        return movieRepository.getAll(page, pageSize);
+    }
     @Override
     public List<Movie> getAll() {
-        return movieRepository.getAll();
+        return movieRepository.getAll(null, null);
     }
  
     @Override
@@ -28,5 +32,10 @@ public class MovieServiceImpl implements MovieService {
             throw new ResourceNotFoundException("Movie not found with id: " + id);
         }
         return movie;
+    }
+
+    @Override
+    public int getTotalNumberOfRecords() {
+        return movieRepository.getTotalNumberOfRecords();
     }
 }

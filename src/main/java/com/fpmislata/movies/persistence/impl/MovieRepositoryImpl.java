@@ -19,11 +19,15 @@ import java.util.List;
 public class MovieRepositoryImpl implements MovieRepository {
  
     @Override
-    public List<Movie> getAll() {
-        final String SQL = "SELECT * FROM movies";
+    public List<Movie> getAll(Integer page, Integer pageSize) {
+        String sql = "SELECT * FROM movies";
+        if(page != null) {
+            int offset = (page - 1) * pageSize;
+            sql += String.format(" LIMIT %d, %d", offset, pageSize);
+        }
         List<Movie> movies = new ArrayList<>();
         try (Connection connection = DBUtil.open()){
-            ResultSet resultSet = DBUtil.select(connection, SQL, null);
+            ResultSet resultSet = DBUtil.select(connection, sql, null);
             while (resultSet.next()) {
                 movies.add(
                         new Movie(
@@ -34,12 +38,11 @@ public class MovieRepositoryImpl implements MovieRepository {
                         )
                 );
             }
-            DBUtil.close(connection);
             return movies;
         } catch (DBConnectionException e) {
             throw e;
         } catch (SQLException e) {
-            throw new SQLStatmentException("SQL: " + SQL);
+            throw new SQLStatmentException("SQL: " + sql);
         }
     }
  
@@ -63,6 +66,19 @@ public class MovieRepositoryImpl implements MovieRepository {
             throw e;
         } catch (SQLException e) {
             throw new SQLStatmentException("SQL: " + SQL);
+        }
+    }
+
+    @Override
+    public int getTotalNumberOfRecords() {
+        final String SQL = "SELECT COUNT(*) FROM movies";
+        try (Connection connection = DBUtil.open()){
+            ResultSet resultSet = DBUtil.select(connection, SQL, null);
+            DBUtil.close(connection);
+            resultSet.next();
+            return (int) resultSet.getInt(1);
+        } catch (SQLException e) {
+            throw new RuntimeException("SQL: " + SQL);
         }
     }
 }
