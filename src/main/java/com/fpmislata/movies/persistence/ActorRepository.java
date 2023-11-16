@@ -1,9 +1,17 @@
 package com.fpmislata.movies.persistence;
 
+import java.util.Optional;
+
 import com.fpmislata.movies.domain.entity.Actor;
 
 public interface ActorRepository {
 
-    void insert(Actor actor);
+    int insert(Actor actor);
+    
+    Optional<Actor> find(int id);
+
+    void update(Actor actor);
+
+    void delete(int id);
     
 }

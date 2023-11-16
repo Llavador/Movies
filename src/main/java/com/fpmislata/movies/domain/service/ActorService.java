@@ -4,6 +4,10 @@ import com.fpmislata.movies.domain.entity.Actor;
 
 public interface ActorService {
 
-    void create(Actor actor);
+    int create(Actor actor);
+    
+    void update(Actor actor);
+
+    void delete(int id);
     
 }

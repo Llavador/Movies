@@ -21,7 +21,7 @@ public class DirectorServiceImpl implements DirectorService {
     }
 
     @Override
-    public void update(int id, Director director) {
+    public void update(Director director) {
         Director existingDirector = directorRepository.find(director.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Director no encontrado con id: " + director.getId()));
         directorRepository.update(director);
@@ -29,10 +29,8 @@ public class DirectorServiceImpl implements DirectorService {
 
     @Override
     public void delete(int id) {
-        Optional<Director> director = directorRepository.find(id);
-        if (director == null) {
-            throw new ResourceNotFoundException("Director not found with id: " + id);
-        }
+        Director director = directorRepository.find(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Director no encontrado con id: " + id));
         directorRepository.delete(id);
     }
 }
