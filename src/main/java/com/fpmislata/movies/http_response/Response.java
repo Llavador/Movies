@@ -3,36 +3,26 @@ package com.fpmislata.movies.http_response;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@JsonPropertyOrder({ "totalRecords", "pagination", "data"})
+@JsonInclude(JsonInclude.Include.NON_NULL) // No incluirá atributos nulos en el JSON
+@Builder
 public class Response {
  
     private Object data;
  
     private Map<String, Object> pagination;
  
-    private Map<String, Object> metadata;
- 
-    public Response(Object data) {
-        this.data = data;
-    }
- 
-    public Response(Object data, int totalRecords) {
-        this.data = data;
-        this.metadata = new HashMap<>();
-        this.metadata.put("total_records", totalRecords);
-    }
- 
-    public Response(Object data, int totalRecords, int page, int pageSize) {
-        this.data = data;
-        this.metadata = new HashMap<>();
-        this.metadata.put("total_records", totalRecords);
-        this.paginate(page, pageSize, totalRecords);
-    }
- 
+    private Integer totalRecords;
+    
     public void paginate(int page, int pageSize, int totalRecords) {
         this.pagination = new HashMap<>();
         this.pagination.put("page", page);

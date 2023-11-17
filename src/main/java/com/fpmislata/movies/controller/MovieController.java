@@ -16,7 +16,7 @@ import java.util.List;
 public class MovieController {
 
     @Autowired
-    private MovieService movieService;
+    MovieService movieService;
     @Value("${default.pageSize}")
     private int defaultPageSize;
 
@@ -26,22 +26,19 @@ public class MovieController {
         pageSize = (pageSize != null)? pageSize : defaultPageSize;
         List<Movie> movies = (page != null)? movieService.getAll(page, pageSize) : movieService.getAll();
         int totalRecords = movieService.getTotalNumberOfRecords();
+        Response response = Response.builder()
+                .data(movies)
+                .totalRecords(totalRecords)
+                .build();
         if(page != null) {
-            return new Response(movies, totalRecords, page, pageSize);
-        } else {
-            return new Response(movies, totalRecords);
+            response.paginate(page, pageSize, totalRecords);
         }
+            return response;
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{id}")
     public Movie find(@PathVariable("id") int id) {
-        try {
-            System.out.println(movieService.find(id));
-            return movieService.find(id);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw e;
-        }
+        return movieService.find(id);
     }
 }
