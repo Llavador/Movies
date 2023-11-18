@@ -38,7 +38,11 @@ public class MovieController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{id}")
-    public Movie find(@PathVariable("id") int id) {
-        return movieService.find(id);
+    public Response find(@PathVariable("id") int id) {
+        Movie movie = movieService.find(id);
+        Response response = Response.builder()
+            .data(movie)
+            .build();
+        return response;
     }
 }

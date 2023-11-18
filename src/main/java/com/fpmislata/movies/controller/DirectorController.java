@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fpmislata.movies.domain.entity.Director;
 import com.fpmislata.movies.domain.service.DirectorService;
+import com.fpmislata.movies.http_response.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,10 +25,13 @@ public class DirectorController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-    public Director create(@RequestBody Director director) {
+    public Response create(@RequestBody Director director) {
         int id = directorService.create(director);
         director.setId(id);
-        return director;
+        Response response = Response.builder()
+            .data(director)
+            .build();
+        return response;
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

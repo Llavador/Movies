@@ -3,7 +3,6 @@ package com.fpmislata.movies.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fpmislata.movies.domain.entity.Actor;
 import com.fpmislata.movies.domain.service.ActorService;
+import com.fpmislata.movies.http_response.Response;
 
 @RequestMapping("/actors")
 @RestController
@@ -24,10 +24,13 @@ public class ActorController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-    public Actor create(@RequestBody Actor actor){
+    public Response create(@RequestBody Actor actor){
         int id = actorService.create(actor);
         actor.setId(id);
-        return actor;
+        Response response = Response.builder()
+            .data(actor)
+            .build();
+        return response;
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
