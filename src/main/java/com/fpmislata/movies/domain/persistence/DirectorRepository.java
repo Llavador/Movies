@@ -1,4 +1,4 @@
-package com.fpmislata.movies.persistence;
+package com.fpmislata.movies.domain.persistence;
 
 import java.util.Optional;
 
@@ -13,4 +13,7 @@ public interface DirectorRepository {
     Optional<Director> find(int id);
     
     void delete(int id);
+
+    Optional<Director> findByMovieId(int movieId);
+
 }

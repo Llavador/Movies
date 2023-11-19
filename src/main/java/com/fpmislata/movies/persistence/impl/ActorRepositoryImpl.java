@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.fpmislata.movies.db.DBUtil;
 import com.fpmislata.movies.domain.entity.Actor;
-import com.fpmislata.movies.persistence.ActorRepository;
+import com.fpmislata.movies.domain.persistence.ActorRepository;
 
 @Repository
 public class ActorRepositoryImpl implements ActorRepository {
@@ -23,7 +23,7 @@ public class ActorRepositoryImpl implements ActorRepository {
         params.add(actor.getName());
         params.add(actor.getBirthYear());
         params.add(actor.getDeathYear());
-        Connection connection = DBUtil.open();
+        Connection connection = DBUtil.open(true);
         int id = DBUtil.insert(connection, SQL, params);
         DBUtil.close(connection);
         return id;
@@ -32,7 +32,7 @@ public class ActorRepositoryImpl implements ActorRepository {
     @Override
     public Optional<Actor> find(int id) {
         final String SQL = "SELECT * FROM actors WHERE id = ? LIMIT 1";
-        try (Connection connection = DBUtil.open()) {
+        try (Connection connection = DBUtil.open(true)) {
             ResultSet resultSet = DBUtil.select(connection, SQL, List.of(id));
             if (resultSet.next()) {
                 return Optional.of(
@@ -57,7 +57,7 @@ public class ActorRepositoryImpl implements ActorRepository {
         params.add(actor.getBirthYear());
         params.add(actor.getDeathYear());
         params.add(actor.getId());
-        Connection connection = DBUtil.open();
+        Connection connection = DBUtil.open(true);
         DBUtil.update(connection, SQL, params);
         DBUtil.close(connection);
     }
@@ -65,7 +65,7 @@ public class ActorRepositoryImpl implements ActorRepository {
     @Override
     public void delete(int id) {
         final String SQL = "DELETE FROM actors WHERE id = ?";
-        Connection connection = DBUtil.open();
+        Connection connection = DBUtil.open(true);
         DBUtil.delete(connection, SQL, List.of(id));
         DBUtil.close(connection);
     }

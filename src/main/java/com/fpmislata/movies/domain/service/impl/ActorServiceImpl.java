@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fpmislata.movies.domain.entity.Actor;
+import com.fpmislata.movies.domain.persistence.ActorRepository;
 import com.fpmislata.movies.domain.service.ActorService;
 import com.fpmislata.movies.exception.ResourceNotFoundException;
-import com.fpmislata.movies.persistence.ActorRepository;
 
 @Service
 public class ActorServiceImpl implements ActorService {

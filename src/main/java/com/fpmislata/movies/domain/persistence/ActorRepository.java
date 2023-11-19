@@ -1,4 +1,4 @@
-package com.fpmislata.movies.persistence;
+package com.fpmislata.movies.domain.persistence;
 
 import java.util.Optional;
 

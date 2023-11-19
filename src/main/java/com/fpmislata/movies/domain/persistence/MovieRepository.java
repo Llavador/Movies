@@ -1,4 +1,4 @@
-package com.fpmislata.movies.persistence;
+package com.fpmislata.movies.domain.persistence;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,4 +12,6 @@ public interface MovieRepository {
     Optional<Movie> find(int id);
     
     int getTotalNumberOfRecords();
+
+    int insert(Movie movie);
 }

@@ -15,13 +15,14 @@ public class DBUtil {
     private static final String USERNAME = "root";
     private static final String PASSWORD = "root";
 
-    public static Connection open(){
+    public static Connection open(boolean autoCommit){
         try {
             Connection connection = DriverManager.getConnection(
                     URL_CONNECTION,
                     USERNAME,
                     PASSWORD
             );
+            connection.setAutoCommit(autoCommit);
             return connection;
         } catch (SQLException e) {
             throw new DBConnectionException("Connection paramaters :\n\n" + getParameters() + "\nOriginal exception message: " + e.getMessage());
