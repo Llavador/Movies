@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonPropertyOrder({ "totalRecords", "pagination", "data"})
-@JsonInclude(JsonInclude.Include.NON_NULL) // No incluirá atributos nulos en el JSON
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
 public class Response {
  
@@ -23,16 +23,16 @@ public class Response {
  
     private Integer totalRecords;
     
-    public void paginate(int page, int pageSize, int totalRecords) {
+    public void paginate(int page, int pageSize, String url) {
         this.pagination = new HashMap<>();
         this.pagination.put("page", page);
         this.pagination.put("page size", pageSize);
         int totalPages = (int) (Math.ceil((double) totalRecords / pageSize));
         this.pagination.put("total pages", totalPages);
         if(page > 1 && totalPages > 1)
-            this.pagination.put("previous", "/movies?page=" + (page - 1));
+            this.pagination.put("previous", url + "/movies?page=" + (page - 1) + "&pageSize=" + pageSize);
         if(page < totalPages)
-            this.pagination.put("next", "/movies?page=" + (page + 1));
+            this.pagination.put("next", url + "/movies?page=" + (page + 1) + "&pageSize=" + pageSize);
     }
  
 }

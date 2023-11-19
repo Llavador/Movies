@@ -1,7 +1,5 @@
 package com.fpmislata.movies.domain.service.impl;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.fpmislata.movies.domain.entity.Director;
@@ -32,5 +30,12 @@ public class DirectorServiceImpl implements DirectorService {
         Director director = directorRepository.find(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Director no encontrado con id: " + id));
         directorRepository.delete(id);
+    }
+
+    @Override
+    public Director find(int id) {
+        Director director = directorRepository.find(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Director no encontrado con id: " + id));
+        return director;
     }
 }

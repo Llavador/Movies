@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
  
 @Repository
 public class MovieRepositoryImpl implements MovieRepository {
@@ -47,20 +48,20 @@ public class MovieRepositoryImpl implements MovieRepository {
     }
  
     @Override
-    public Movie find(int id) {
+    public Optional<Movie> find(int id) {
         final String SQL = "SELECT * FROM movies WHERE id = ? LIMIT 1";
         try (Connection connection = DBUtil.open()){
             ResultSet resultSet = DBUtil.select(connection, SQL, List.of(id));
             DBUtil.close(connection);
             if(resultSet.next()) {
-                return new Movie(
+                return Optional.of(new Movie(
                         resultSet.getInt("id"),
                         resultSet.getString("title"),
                         resultSet.getInt("year"),
                         resultSet.getInt("runtime")
-                );
+                ));
             } else {
-                throw new ResourceNotFoundException("Id movie: " + id);
+                return Optional.empty();
             }
         }catch (DBConnectionException e) {
             throw e;

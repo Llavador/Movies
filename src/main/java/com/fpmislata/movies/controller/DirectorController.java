@@ -9,6 +9,7 @@ import com.fpmislata.movies.http_response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -45,5 +46,15 @@ public class DirectorController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") int id) {
         directorService.delete(id);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/{id}")
+    public Response find(@PathVariable("id") int id) {
+        Director director = directorService.find(id);
+        Response response = Response.builder()
+            .data(director)
+            .build();
+        return response;
     }
 }

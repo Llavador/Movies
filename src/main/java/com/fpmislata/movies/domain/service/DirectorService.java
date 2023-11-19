@@ -9,4 +9,6 @@ public interface DirectorService {
     void update(Director director);
     
     void delete(int id);
+
+    Director find(int id);
 }

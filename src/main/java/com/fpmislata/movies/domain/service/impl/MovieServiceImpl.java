@@ -9,10 +9,10 @@ import com.fpmislata.movies.exception.ResourceNotFoundException;
 import com.fpmislata.movies.persistence.MovieRepository;
 
 import java.util.List;
- 
+
 @Service
 public class MovieServiceImpl implements MovieService {
- 
+
     @Autowired
     private MovieRepository movieRepository;
 
@@ -20,17 +20,16 @@ public class MovieServiceImpl implements MovieService {
     public List<Movie> getAll(Integer page, Integer pageSize) {
         return movieRepository.getAll(page, pageSize);
     }
+
     @Override
     public List<Movie> getAll() {
         return movieRepository.getAll(null, null);
     }
- 
+
     @Override
     public Movie find(int id) {
-        Movie movie = movieRepository.find(id);
-        if(movie == null) {
-            throw new ResourceNotFoundException("Movie not found with id: " + id);
-        }
+        Movie movie = movieRepository.find(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Película no encontrada con id: " + id));
         return movie;
     }
 

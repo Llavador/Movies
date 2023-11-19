@@ -17,8 +17,14 @@ public class MovieController {
 
     @Autowired
     MovieService movieService;
+ 
+    public static final String MOVIES = "/movies";
+    
     @Value("${default.pageSize}")
     private int defaultPageSize;
+    
+    @Value("${application.url}")
+    private String urlBase;
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("")
@@ -31,7 +37,7 @@ public class MovieController {
                 .totalRecords(totalRecords)
                 .build();
         if(page != null) {
-            response.paginate(page, pageSize, totalRecords);
+            response.paginate(page, pageSize, urlBase);
         }
             return response;
     }
