@@ -3,15 +3,15 @@ package com.fpmislata.movies.domain.persistence;
 import java.util.List;
 import java.util.Optional;
 
-import com.fpmislata.movies.domain.entity.Movie;
+import com.fpmislata.movies.dto.MovieDTO;
 
 public interface MovieRepository {
 
-    List<Movie> getAll(Integer page, Integer pageSize);
+    List<MovieDTO> getAll(Integer page, Integer pageSize);
 
-    Optional<Movie> find(int id);
+    Optional<MovieDTO> find(int id);
     
     int getTotalNumberOfRecords();
 
-    int insert(Movie movie);
+    int insert(MovieDTO movieDTO);
 }

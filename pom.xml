@@ -86,6 +86,11 @@
                             <version>${version.mapstruct-lombok}</version>
                         </path>
                     </annotationProcessorPaths>
+					<compilerArgs>
+						<compilerArg>
+							-Amapstruct.defaultComponentModel=spring
+						</compilerArg>
+					</compilerArgs>
                 </configuration>
             </plugin>
 		</plugins>

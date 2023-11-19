@@ -9,8 +9,10 @@ import org.mapstruct.factory.Mappers;
 
 import com.fpmislata.movies.controller.model.director.DirectorCreateWeb;
 import com.fpmislata.movies.controller.model.director.DirectorDetailWeb;
+import com.fpmislata.movies.controller.model.director.DirectorListWeb;
 import com.fpmislata.movies.controller.model.director.DirectorUpdateWeb;
 import com.fpmislata.movies.domain.entity.Director;
+import com.fpmislata.movies.dto.DirectorDTO;
 import com.fpmislata.movies.persistence.model.DirectorEntity;
 
 @Mapper(componentModel = "spring")
@@ -18,19 +20,26 @@ public interface DirectorMapper {
 
     DirectorMapper mapper = Mappers.getMapper(DirectorMapper.class);
 
-    Director toDirector(DirectorCreateWeb directorCreateWeb);
+    @Mapping(target = "id", ignore = true)
+    DirectorDTO toDirectorDTO(DirectorCreateWeb directorCreateWeb);
 
-    Director toDirector(DirectorUpdateWeb directorUpdateWeb);
+    DirectorDTO toDirectorDTO(DirectorUpdateWeb directorUpdateWeb);
 
-    DirectorDetailWeb toDirectorDetailWeb(Director director);
+    DirectorDetailWeb toDirectorDetailWeb(DirectorDTO directorDTO);
 
-    DirectorEntity toDirectorEntity(Director director);
+    DirectorListWeb toDirectorListWeb(DirectorDTO directorDTO);
+
+    DirectorEntity toDirectorEntity(DirectorDTO directorDTO);
 
     @Mapping(target = "id", expression = "java(resultSet.getInt(\"id\"))")
     @Mapping(target = "name", expression = "java(resultSet.getString(\"name\"))")
     @Mapping(target = "birthYear", expression = "java(resultSet.getInt(\"birthYear\"))")
-    @Mapping(target = "deathYear", expression = "java(resultSet.getInt(\"deathYear\"))")
+    @Mapping(target = "deathYear", expression = "java((resultSet.getObject(\"deathYear\") != null)? resultSet.getInt(\"deathYear\") : null)")
     DirectorEntity toDirectorEntity(ResultSet resultSet) throws SQLException;
 
-    Director toDirector(DirectorEntity DirectorEntity);
+    DirectorDTO toDirectorDTO(DirectorEntity directorEntity);
+
+    Director toDirector(DirectorDTO directorDTO);
+
+    DirectorDTO toDirectorDTO(Director director);
 }

@@ -2,18 +2,18 @@ package com.fpmislata.movies.domain.persistence;
 
 import java.util.Optional;
 
-import com.fpmislata.movies.domain.entity.Director;
+import com.fpmislata.movies.dto.DirectorDTO;
 
 public interface DirectorRepository {
 
-    int insert(Director director);
+    int insert(DirectorDTO directorDTO);
     
-    void update(Director director);
+    void update(DirectorDTO directorDTO);
 
-    Optional<Director> find(int id);
+    Optional<DirectorDTO> find(int id);
     
     void delete(int id);
 
-    Optional<Director> findByMovieId(int movieId);
+    Optional<DirectorDTO> findByMovieId(int movieId);
 
 }

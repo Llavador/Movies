@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.fpmislata.movies.db.DBUtil;
-import com.fpmislata.movies.domain.entity.Director;
 import com.fpmislata.movies.domain.persistence.DirectorRepository;
+import com.fpmislata.movies.dto.DirectorDTO;
 import com.fpmislata.movies.mapper.DirectorMapper;
 import com.fpmislata.movies.persistence.dao.DirectorDAO;
 import com.fpmislata.movies.persistence.model.DirectorEntity;
@@ -21,36 +21,36 @@ public class DirectorRepositoryImpl implements DirectorRepository {
     DirectorDAO directorDAO;
  
     @Override
-    public int insert(Director director) {
+    public int insert(DirectorDTO directorDTO) {
         try (Connection connection = DBUtil.open(true)){
-            return directorDAO.insert(connection, DirectorMapper.mapper.toDirectorEntity(director));
+            return directorDAO.insert(connection, DirectorMapper.mapper.toDirectorEntity(directorDTO));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
- 
+
     @Override
-    public Optional<Director> find(int id) {
+    public Optional<DirectorDTO> find(int id) {
         try (Connection connection = DBUtil.open(true)){
             Optional<DirectorEntity> directorEntity = directorDAO.find(connection, id);
             if(directorEntity.isEmpty()) {
                 return Optional.empty();
             }
-            return Optional.of(DirectorMapper.mapper.toDirector(directorEntity.get()));
+            return Optional.of(DirectorMapper.mapper.toDirectorDTO(directorEntity.get()));
         } catch (SQLException e) {
             throw new RuntimeException();
         }
     }
- 
+
     @Override
-    public void update(Director director) {
+    public void update(DirectorDTO directorDTO) {
         try(Connection connection= DBUtil.open(true)) {
-            directorDAO.update(connection, DirectorMapper.mapper.toDirectorEntity(director));
+            directorDAO.update(connection, DirectorMapper.mapper.toDirectorEntity(directorDTO));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
- 
+
     @Override
     public void delete(int id) {
         try(Connection connection= DBUtil.open(true)) {
@@ -59,15 +59,15 @@ public class DirectorRepositoryImpl implements DirectorRepository {
             throw new RuntimeException(e);
         }
     }
- 
+
     @Override
-    public Optional<Director> findByMovieId(int movieId) {
+    public Optional<DirectorDTO> findByMovieId(int movieId) {
         try(Connection connection= DBUtil.open(true)) {
             Optional<DirectorEntity> directorEntity = directorDAO.findByMovieId(connection, movieId);
             if(directorEntity.isEmpty()) {
                 return Optional.empty();
             }
-            return Optional.of(DirectorMapper.mapper.toDirector(directorEntity.get()));
+            return Optional.of(DirectorMapper.mapper.toDirectorDTO(directorEntity.get()));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

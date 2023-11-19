@@ -3,14 +3,18 @@ package com.fpmislata.movies.domain.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fpmislata.movies.domain.entity.Actor;
-import com.fpmislata.movies.domain.entity.Director;
 import com.fpmislata.movies.domain.entity.Movie;
 import com.fpmislata.movies.domain.persistence.ActorRepository;
 import com.fpmislata.movies.domain.persistence.DirectorRepository;
 import com.fpmislata.movies.domain.persistence.MovieRepository;
 import com.fpmislata.movies.domain.service.MovieService;
+import com.fpmislata.movies.dto.ActorDTO;
+import com.fpmislata.movies.dto.DirectorDTO;
+import com.fpmislata.movies.dto.MovieDTO;
 import com.fpmislata.movies.exception.ResourceNotFoundException;
+import com.fpmislata.movies.mapper.ActorMapper;
+import com.fpmislata.movies.mapper.DirectorMapper;
+import com.fpmislata.movies.mapper.MovieMapper;
 
 import java.util.List;
 
@@ -19,24 +23,33 @@ public class MovieServiceImpl implements MovieService {
 
     @Autowired
     private MovieRepository movieRepository;
+    @Autowired
     private DirectorRepository directorRepository;
+    @Autowired
     private ActorRepository actorRepository;
 
     @Override
-    public List<Movie> getAll(Integer page, Integer pageSize) {
+    public List<MovieDTO> getAll(Integer page, Integer pageSize) {
         return movieRepository.getAll(page, pageSize);
     }
 
     @Override
-    public List<Movie> getAll() {
+    public List<MovieDTO> getAll() {
         return movieRepository.getAll(null, null);
     }
 
     @Override
-    public Movie find(int id) {
-        Movie movie = movieRepository.find(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Película no encontrada con id: " + id));
-        return movie;
+    public MovieDTO find(int id) {
+        MovieDTO movieDTO = movieRepository.find(id).orElseThrow(() -> new ResourceNotFoundException("Movie not found with id: " + id));
+
+        DirectorDTO directorDTO = directorRepository.findByMovieId(id).orElse(null);
+        movieDTO.setDirectorDTO(directorDTO);
+
+        List<ActorDTO> actorDTOs = actorRepository.findByMovieId(id);
+
+        movieDTO.setActorDTOs(actorDTOs);
+
+        return movieDTO;
     }
 
     @Override
@@ -45,15 +58,20 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public int create(Movie movie, int directorId, List<Integer> actorIds) {
-        Director director = directorRepository.find(directorId)
+    public int create(MovieDTO movieDTO, int directorId, List<Integer> actorIds) {
+        DirectorDTO directorDTO = directorRepository.find(directorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Director not found with id: " + directorId));
-        List<Actor> actors = actorIds.stream()
+        List<ActorDTO> actorDTOs = actorIds.stream()
                 .map(actorId -> actorRepository.find(actorId)
-                        .orElseThrow(() -> new ResourceNotFoundException("Actor not found with id: " + actorId)))
+                        .orElseThrow(() -> new ResourceNotFoundException("Actor not found with id: " + actorId))                )
                 .toList();
-        movie.setDirector(director);
-        movie.setActors(actors);
-        return movieRepository.insert(movie);
+        Movie movie = MovieMapper.mapper.toMovie(movieDTO);
+        movie.setDirector(DirectorMapper.mapper.toDirector(directorDTO));
+        movie.setActors(
+                actorDTOs.stream()
+                        .map(ActorMapper.mapper::toActor)
+                        .toList()
+        );
+        return movieRepository.insert(MovieMapper.mapper.toMovieDTO(movie));
     }
 }

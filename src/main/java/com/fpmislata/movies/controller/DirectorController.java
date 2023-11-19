@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fpmislata.movies.controller.model.director.DirectorCreateWeb;
 import com.fpmislata.movies.controller.model.director.DirectorDetailWeb;
 import com.fpmislata.movies.controller.model.director.DirectorUpdateWeb;
-import com.fpmislata.movies.domain.entity.Director;
 import com.fpmislata.movies.domain.service.DirectorService;
+import com.fpmislata.movies.dto.DirectorDTO;
 import com.fpmislata.movies.http_response.Response;
 import com.fpmislata.movies.mapper.DirectorMapper;
 
@@ -31,7 +31,7 @@ public class DirectorController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
     public Response create(@RequestBody DirectorCreateWeb directorCreateWeb){
-        int id = directorService.create(DirectorMapper.mapper.toDirector(directorCreateWeb));
+        int id = directorService.create(DirectorMapper.mapper.toDirectorDTO(directorCreateWeb));
         DirectorDetailWeb directorDetailWeb = new DirectorDetailWeb(
                 id,
                 directorCreateWeb.getName(),
@@ -48,7 +48,7 @@ public class DirectorController {
     @PutMapping("/{id}")
     public void update(@PathVariable("id") int id, @RequestBody DirectorUpdateWeb directorUpdateWeb) {
         directorUpdateWeb.setId(id);
-        directorService.update(DirectorMapper.mapper.toDirector(directorUpdateWeb));
+        directorService.update(DirectorMapper.mapper.toDirectorDTO(directorUpdateWeb));
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -60,9 +60,9 @@ public class DirectorController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{id}")
     public Response find(@PathVariable("id") int id) {
-        Director director = directorService.find(id);
+        DirectorDTO directorDTO = directorService.find(id);
         Response response = Response.builder()
-            .data(DirectorMapper.mapper.toDirectorDetailWeb(director))
+            .data(DirectorMapper.mapper.toDirectorDetailWeb(directorDTO))
             .build();
         return response;
     }

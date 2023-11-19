@@ -1,16 +1,19 @@
 package com.fpmislata.movies.domain.persistence;
 
+import java.util.List;
 import java.util.Optional;
 
-import com.fpmislata.movies.domain.entity.Actor;
+import com.fpmislata.movies.dto.ActorDTO;
 
 public interface ActorRepository {
 
-    int insert(Actor actor);
+    int insert(ActorDTO actorDTO);
     
-    Optional<Actor> find(int id);
+    Optional<ActorDTO> find(int id);
 
-    void update(Actor actor);
+    List<ActorDTO> findByMovieId(int movieId);
+
+    void update(ActorDTO actorDTO);
 
     void delete(int id);
     

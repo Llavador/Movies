@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MainController {
  
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/")
+    @GetMapping("")
     public void index() {
         System.out.println("Método index del controlador Main ejecutándose");
     }
