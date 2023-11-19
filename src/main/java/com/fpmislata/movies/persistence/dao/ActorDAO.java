@@ -30,7 +30,7 @@ public class ActorDAO {
         final String SQL = "SELECT * FROM actors WHERE id = ? LIMIT 1";
         try {
             ResultSet resultSet = DBUtil.select(connection, SQL, List.of(id));
-            return Optional.ofNullable(resultSet.next()? ActorMapper.mapper.toActorEntity(resultSet):null);
+            return Optional.ofNullable(resultSet.next() ? ActorMapper.mapper.toActorEntity(resultSet) : null);
         } catch (SQLException e) {
             throw new RuntimeException();
         }
@@ -47,8 +47,21 @@ public class ActorDAO {
         DBUtil.close(connection);
     }
 
-    public void delete(Connection connection, int id) {
-        final String SQL = "DELETE FROM actors WHERE id = ?";
+    public void delete(Connection connection, int id) throws SQLException {
+        try {
+            final String SQL = "DELETE FROM actors WHERE id = ?";
+            DBUtil.delete(connection, SQL, List.of(id));
+            removeActorFromMovies(connection, id);
+            connection.commit();
+            DBUtil.close(connection);
+        } catch (Exception e) {
+            connection.rollback();
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void removeActorFromMovies(Connection connection, int id) {
+        final String SQL = "DELETE FROM actors_movies WHERE actor_id = ?";
         DBUtil.delete(connection, SQL, List.of(id));
         DBUtil.close(connection);
     }
@@ -56,13 +69,13 @@ public class ActorDAO {
     public List<ActorEntity> findByMovieId(Connection connection, int movieId) {
         List<ActorEntity> actorEntities = new ArrayList<>();
         final String SQL = """
-                SELECT a.* FROM actors a
-                INNER JOIN actors_movies am ON am.actor_id = a.id
-                INNER JOIN movies m ON m.id = am.movie_id AND m.id = ?
-            """;
+                    SELECT a.* FROM actors a
+                    INNER JOIN actors_movies am ON am.actor_id = a.id
+                    INNER JOIN movies m ON m.id = am.movie_id AND m.id = ?
+                """;
         try {
             ResultSet resultSet = DBUtil.select(connection, SQL, List.of(movieId));
-            if(!resultSet.next()) {
+            if (!resultSet.next()) {
                 return null;
             }
             do {

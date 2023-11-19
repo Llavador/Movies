@@ -68,4 +68,22 @@ public class MovieRepositoryImpl implements MovieRepository {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public void update(MovieDTO movieDTO) {
+        try(Connection connection= DBUtil.open(true)) {
+            movieDAO.update(connection, MovieMapper.mapper.toMovieEntity(movieDTO));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void delete(int id) {
+        try(Connection connection= DBUtil.open(true)) {
+            movieDAO.delete(connection, id);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

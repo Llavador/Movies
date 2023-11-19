@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.fpmislata.movies.controller.model.movie.MovieCreateWeb;
 import com.fpmislata.movies.controller.model.movie.MovieListWeb;
+import com.fpmislata.movies.controller.model.movie.MovieUpdateWeb;
 import com.fpmislata.movies.domain.service.MovieService;
 import com.fpmislata.movies.dto.MovieDTO;
 import com.fpmislata.movies.http_response.Response;
@@ -70,5 +71,20 @@ public class MovieController {
         movieListWeb.setTitle(movieCreateWeb.getTitle());
         movieListWeb.setId(id);
         return Response.builder().data(movieListWeb).build();
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/{id}")
+    public void update(@PathVariable("id") int id, @RequestBody MovieUpdateWeb movieUpdateWeb) {
+        movieUpdateWeb.setId(id);
+        movieService.update(MovieMapper.mapper.toMovieDTO(movieUpdateWeb),
+        movieUpdateWeb.getDirectorId(),
+        movieUpdateWeb.getActorIds());
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable("id") int id) {
+        movieService.delete(id);
     }
 }

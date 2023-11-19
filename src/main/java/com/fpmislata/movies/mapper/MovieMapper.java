@@ -12,6 +12,7 @@ import org.mapstruct.factory.Mappers;
 import com.fpmislata.movies.controller.model.movie.MovieCreateWeb;
 import com.fpmislata.movies.controller.model.movie.MovieDetailWeb;
 import com.fpmislata.movies.controller.model.movie.MovieListWeb;
+import com.fpmislata.movies.controller.model.movie.MovieUpdateWeb;
 import com.fpmislata.movies.domain.entity.Actor;
 import com.fpmislata.movies.domain.entity.Movie;
 import com.fpmislata.movies.dto.ActorDTO;
@@ -71,4 +72,8 @@ public interface MovieMapper {
                 .map(actorDTO -> actorDTO.getId())
                 .toList();
     }
+    
+    @Mapping(target = "directorDTO", ignore = true)
+    @Mapping(target = "actorDTOs", ignore = true)
+    MovieDTO toMovieDTO(MovieUpdateWeb movieUpdateWeb);
 }

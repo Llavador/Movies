@@ -16,4 +16,7 @@ public interface MovieService {
     
     int create(MovieDTO movieDTO, int directorId, List<Integer> actorIds);
     
+    void update(MovieDTO movieDTO, int directorId, List<Integer> actorIds);
+    
+    void delete(int id);
 }

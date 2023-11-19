@@ -14,4 +14,8 @@ public interface MovieRepository {
     int getTotalNumberOfRecords();
 
     int insert(MovieDTO movieDTO);
+
+    void update(MovieDTO movieDTO);
+
+    void delete(int id);
 }

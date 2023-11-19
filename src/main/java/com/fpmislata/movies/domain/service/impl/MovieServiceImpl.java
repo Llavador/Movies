@@ -40,7 +40,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieDTO find(int id) {
-        MovieDTO movieDTO = movieRepository.find(id).orElseThrow(() -> new ResourceNotFoundException("Movie not found with id: " + id));
+        MovieDTO movieDTO = movieRepository.find(id).orElseThrow(() -> new ResourceNotFoundException("Película no encontrada con id: " + id));
 
         DirectorDTO directorDTO = directorRepository.findByMovieId(id).orElse(null);
         movieDTO.setDirectorDTO(directorDTO);
@@ -60,10 +60,10 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public int create(MovieDTO movieDTO, int directorId, List<Integer> actorIds) {
         DirectorDTO directorDTO = directorRepository.find(directorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Director not found with id: " + directorId));
+                .orElseThrow(() -> new ResourceNotFoundException("Director no encontrado con id: " + directorId));
         List<ActorDTO> actorDTOs = actorIds.stream()
                 .map(actorId -> actorRepository.find(actorId)
-                        .orElseThrow(() -> new ResourceNotFoundException("Actor not found with id: " + actorId))                )
+                        .orElseThrow(() -> new ResourceNotFoundException("Actor no encontrado con id: " + actorId))                )
                 .toList();
         Movie movie = MovieMapper.mapper.toMovie(movieDTO);
         movie.setDirector(DirectorMapper.mapper.toDirector(directorDTO));
@@ -73,5 +73,30 @@ public class MovieServiceImpl implements MovieService {
                         .toList()
         );
         return movieRepository.insert(MovieMapper.mapper.toMovieDTO(movie));
+    }
+
+    @Override
+    public void update(MovieDTO movieDTO, int directorId, List<Integer> actorIds) {
+        movieRepository.find(movieDTO.getId()).orElseThrow(() -> new ResourceNotFoundException("Película no encontrada con id: " + movieDTO.getId()));
+        DirectorDTO directorDTO = directorRepository.find(directorId)
+                .orElseThrow(() -> new ResourceNotFoundException("Director no encontrado con id: " + directorId));
+        List<ActorDTO> actorDTOs = actorIds.stream()
+                .map(actorId -> actorRepository.find(actorId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Actor no encontrado con id: " + actorId))                )
+                .toList();
+        Movie movie = MovieMapper.mapper.toMovie(movieDTO);
+        movie.setDirector(DirectorMapper.mapper.toDirector(directorDTO));
+        movie.setActors(
+                actorDTOs.stream()
+                        .map(ActorMapper.mapper::toActor)
+                        .toList()
+        );
+        movieRepository.update(MovieMapper.mapper.toMovieDTO(movie));
+    }
+
+    @Override
+    public void delete(int id) {
+        movieRepository.find(id).orElseThrow(() -> new ResourceNotFoundException("Director no encontrado con id: " + id));
+        movieRepository.delete(id);
     }
 }
