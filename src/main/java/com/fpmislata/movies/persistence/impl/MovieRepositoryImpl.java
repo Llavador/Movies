@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 import com.fpmislata.movies.db.DBUtil;
 import com.fpmislata.movies.domain.entity.Movie;
 import com.fpmislata.movies.exception.DBConnectionException;
-import com.fpmislata.movies.exception.ResourceNotFoundException;
 import com.fpmislata.movies.exception.SQLStatmentException;
 import com.fpmislata.movies.persistence.MovieRepository;
 
