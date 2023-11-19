@@ -5,9 +5,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import com.fpmislata.movies.controller.model.movie.MovieListWeb;
 import com.fpmislata.movies.domain.entity.Movie;
 import com.fpmislata.movies.domain.service.MovieService;
 import com.fpmislata.movies.http_response.Response;
+import com.fpmislata.movies.mapper.MovieMapper;
 
 import java.util.List;
 
@@ -31,11 +33,14 @@ public class MovieController {
     public Response getAll(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer pageSize) {
         pageSize = (pageSize != null)? pageSize : defaultPageSize;
         List<Movie> movies = (page != null)? movieService.getAll(page, pageSize) : movieService.getAll();
-        int totalRecords = movieService.getTotalNumberOfRecords();
-        Response response = Response.builder()
-                .data(movies)
-                .totalRecords(totalRecords)
-                .build();
+        List<MovieListWeb> moviesWeb = movies.stream()
+             .map(movie -> MovieMapper.mapper.toMovieListWeb(movie))
+             .toList();
+     int totalRecords = movieService.getTotalNumberOfRecords();
+     Response response = Response.builder()
+             .data(moviesWeb)
+             .totalRecords(totalRecords)
+             .build();
         if(page != null) {
             response.paginate(page, pageSize, urlBase);
         }
@@ -47,7 +52,7 @@ public class MovieController {
     public Response find(@PathVariable("id") int id) {
         Movie movie = movieService.find(id);
         Response response = Response.builder()
-            .data(movie)
+            .data(MovieMapper.mapper.toMovieDetailWeb(movie))
             .build();
         return response;
     }

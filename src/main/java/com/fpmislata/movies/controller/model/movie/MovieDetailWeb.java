@@ -17,7 +17,7 @@ public class MovieDetailWeb {
     private int id;
     private String title;
     private int year;
-    private int runtime;
+    private int runTime;
     private DirectorListWeb director;
     private List<ActorListWeb> actors;
 }
