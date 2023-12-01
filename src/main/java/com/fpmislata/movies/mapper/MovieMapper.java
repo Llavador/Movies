@@ -62,8 +62,8 @@ public interface MovieMapper {
     @Mapping(target = "id", ignore = true)
     MovieDTO toMovieDTO(MovieCreateWeb movieCreateWeb);
 
-    @Mapping(target = "directorId", expression = "java(movie.getDirector().getId())")
-    @Mapping(target = "actorIds", expression = "java(mapActorsToActorIds(movie.getActors()))")
+    @Mapping(target = "directorId", expression = "java(movieDTO.getDirectorDTO().getId())")
+    @Mapping(target = "actorIds", expression = "java(mapActorsToActorIds(movieDTO.getActorDTOs()))")
     MovieEntity toMovieEntity(MovieDTO movieDTO);
 
     @Named("actorToActorIds")
