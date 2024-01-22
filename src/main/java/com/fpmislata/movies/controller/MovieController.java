@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import com.fpmislata.movies.controller.model.movie.MovieCreateWeb;
 import com.fpmislata.movies.controller.model.movie.MovieListWeb;
 import com.fpmislata.movies.controller.model.movie.MovieUpdateWeb;
+import com.fpmislata.movies.domain.entity.Movie;
 import com.fpmislata.movies.domain.service.MovieService;
-import com.fpmislata.movies.dto.MovieDTO;
 import com.fpmislata.movies.http_response.Response;
 import com.fpmislata.movies.mapper.MovieMapper;
 
@@ -35,11 +35,11 @@ public class MovieController {
     public Response getAll(@RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer pageSize) {
         pageSize = (pageSize != null) ? pageSize : defaultPageSize;
-        List<MovieDTO> movieDTOs = (page != null) ? movieService.getAll(page, pageSize) : movieService.getAll();
-        List<MovieListWeb> moviesWeb = movieDTOs.stream()
-                .map(movieDTO -> MovieMapper.mapper.toMovieListWeb(movieDTO))
+        List<Movie> movies = (page != null) ? movieService.getAll(page, pageSize) : movieService.getAll();
+        List<MovieListWeb> moviesWeb = movies.stream()
+                .map(movie -> MovieMapper.mapper.toMovieListWeb(movie))
                 .toList();
-        int totalRecords = movieService.getTotalNumberOfRecords();
+        long totalRecords = movieService.getTotalNumberOfRecords();
         Response response = Response.builder()
                 .data(moviesWeb)
                 .totalRecords(totalRecords)
@@ -53,9 +53,9 @@ public class MovieController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{id}")
     public Response find(@PathVariable("id") int id) {
-        MovieDTO movieDTO = movieService.find(id);
+        Movie movie = movieService.find(id);
         Response response = Response.builder()
-                .data(MovieMapper.mapper.toMovieDetailWeb(movieDTO))
+                .data(MovieMapper.mapper.toMovieDetailWeb(movie))
                 .build();
         return response;
     }
@@ -63,23 +63,18 @@ public class MovieController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
     public Response create(@RequestBody MovieCreateWeb movieCreateWeb) {
-        int id = movieService.create(
-                MovieMapper.mapper.toMovieDTO(movieCreateWeb),
-                movieCreateWeb.getDirectorId(),
-                movieCreateWeb.getActorIds());
-        MovieListWeb movieListWeb = new MovieListWeb();
-        movieListWeb.setTitle(movieCreateWeb.getTitle());
-        movieListWeb.setId(id);
-        return Response.builder().data(movieListWeb).build();
+        Movie movie = movieService.create(
+                MovieMapper.mapper.toMovie(movieCreateWeb));
+        return Response.builder().data(MovieMapper.mapper.toMovieDetailWeb(movie)).build();
+
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{id}")
-    public void update(@PathVariable("id") int id, @RequestBody MovieUpdateWeb movieUpdateWeb) {
+    public Response update(@PathVariable("id") int id, @RequestBody MovieUpdateWeb movieUpdateWeb) {
         movieUpdateWeb.setId(id);
-        movieService.update(MovieMapper.mapper.toMovieDTO(movieUpdateWeb),
-        movieUpdateWeb.getDirectorId(),
-        movieUpdateWeb.getActorIds());
+        Movie movie = movieService.update(MovieMapper.mapper.toMovie(movieUpdateWeb));
+        return Response.builder().data(MovieMapper.mapper.toMovieDetailWeb(movie)).build();
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

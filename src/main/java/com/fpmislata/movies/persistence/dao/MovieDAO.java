@@ -1,21 +1,28 @@
 package com.fpmislata.movies.persistence.dao;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import java.sql.Connection;
-import org.springframework.stereotype.Component;
+//import java.sql.ResultSet;
+//import java.sql.SQLException;
+//import java.util.ArrayList;
+//import java.util.List;
+//import java.util.Optional;
 
-import com.fpmislata.movies.db.DBUtil;
-import com.fpmislata.movies.mapper.MovieMapper;
+//import java.sql.Connection;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+//import com.fpmislata.movies.db.DBUtil;
+//import com.fpmislata.movies.mapper.MovieMapper;
 import com.fpmislata.movies.persistence.model.MovieEntity;
 
-@Component
-public class MovieDAO {
+@Repository
+//public class MovieDAO {
+public interface MovieDAO extends JpaRepository<MovieEntity, Integer> {
 
+    List<MovieEntity> findByDirectorEntityId(int directorId);
+/* 
     public List<MovieEntity> findAll(Connection connection, Integer page, Integer pageSize) {
         List<Object> params = null;
         String sql = "SELECT * FROM movies";
@@ -114,5 +121,5 @@ public class MovieDAO {
         DBUtil.delete(connection, SQL, List.of(id));
         DBUtil.close(connection);
     }
-
+*/
 }

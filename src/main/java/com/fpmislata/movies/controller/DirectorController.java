@@ -5,10 +5,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fpmislata.movies.controller.model.director.DirectorCreateWeb;
 import com.fpmislata.movies.controller.model.director.DirectorDetailWeb;
 import com.fpmislata.movies.controller.model.director.DirectorUpdateWeb;
+import com.fpmislata.movies.controller.model.movie.MovieListWeb;
+import com.fpmislata.movies.domain.entity.Director;
 import com.fpmislata.movies.domain.service.DirectorService;
-import com.fpmislata.movies.dto.DirectorDTO;
+import com.fpmislata.movies.domain.service.MovieService;
 import com.fpmislata.movies.http_response.Response;
 import com.fpmislata.movies.mapper.DirectorMapper;
+import com.fpmislata.movies.mapper.MovieMapper;
+
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,11 +32,14 @@ public class DirectorController {
 
     @Autowired
     DirectorService directorService;
+    
+    @Autowired
+    MovieService movieService;
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
     public Response create(@RequestBody DirectorCreateWeb directorCreateWeb){
-        int id = directorService.create(DirectorMapper.mapper.toDirectorDTO(directorCreateWeb));
+        int id = directorService.create(DirectorMapper.mapper.toDirector(directorCreateWeb));
         DirectorDetailWeb directorDetailWeb = new DirectorDetailWeb(
                 id,
                 directorCreateWeb.getName(),
@@ -48,7 +56,7 @@ public class DirectorController {
     @PutMapping("/{id}")
     public void update(@PathVariable("id") int id, @RequestBody DirectorUpdateWeb directorUpdateWeb) {
         directorUpdateWeb.setId(id);
-        directorService.update(DirectorMapper.mapper.toDirectorDTO(directorUpdateWeb));
+        directorService.update(DirectorMapper.mapper.toDirector(directorUpdateWeb));
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -60,10 +68,16 @@ public class DirectorController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{id}")
     public Response find(@PathVariable("id") int id) {
-        DirectorDTO directorDTO = directorService.find(id);
+        Director director = directorService.find(id);
         Response response = Response.builder()
-            .data(DirectorMapper.mapper.toDirectorDetailWeb(directorDTO))
+            .data(DirectorMapper.mapper.toDirectorDetailWeb(director))
             .build();
         return response;
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/{id}/movies")
+    public List<MovieListWeb> findMoviesByDirectorId(@PathVariable("id") int id) {
+        return MovieMapper.mapper.toMovieListWebs(movieService.findByDirectorId(id));
     }
 }

@@ -21,7 +21,7 @@ public class Response {
  
     private Map<String, Object> pagination;
  
-    private Integer totalRecords;
+    private long totalRecords;
     
     public void paginate(int page, int pageSize, String url) {
         this.pagination = new HashMap<>();

@@ -4,9 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fpmislata.movies.domain.entity.Actor;
-import com.fpmislata.movies.domain.persistence.ActorRepository;
+import com.fpmislata.movies.domain.repository.ActorRepository;
 import com.fpmislata.movies.domain.service.ActorService;
-import com.fpmislata.movies.dto.ActorDTO;
 import com.fpmislata.movies.exception.ResourceNotFoundException;
 import com.fpmislata.movies.mapper.ActorMapper;
 
@@ -17,16 +16,14 @@ public class ActorServiceImpl implements ActorService {
     ActorRepository actorRepository;
 
     @Override
-    public int create(ActorDTO actorDTO) {
-        Actor actor = ActorMapper.mapper.toActor(actorDTO);
-        return actorRepository.insert(ActorMapper.mapper.toActorDTO(actor));
+    public int create(Actor actor) {
+        return actorRepository.insert(actor);
     }
 
     @Override
-    public void update(ActorDTO actorDTO) {
-        actorRepository.find(actorDTO.getId()).orElseThrow(() -> new ResourceNotFoundException("Actor no encontrado con id: " + actorDTO.getId()));
-        Actor actor = ActorMapper.mapper.toActor(actorDTO);
-        actorRepository.update(ActorMapper.mapper.toActorDTO(actor));
+    public void update(Actor actor) {
+        actorRepository.find(actor.getId()).orElseThrow(() -> new ResourceNotFoundException("Actor no encontrado con id: " + actor.getId()));
+        actorRepository.update(actor);
     }
 
     @Override
@@ -36,8 +33,8 @@ public class ActorServiceImpl implements ActorService {
     }
 
     @Override
-    public ActorDTO find(int id) {
-        ActorDTO actorDTO = actorRepository.find(id).orElseThrow(() -> new ResourceNotFoundException("Actor no encontrado con id: " + id));
-        return actorDTO;
+    public Actor find(int id) {
+        Actor actor = actorRepository.find(id).orElseThrow(() -> new ResourceNotFoundException("Actor no encontrado con id: " + id));
+        return actor;
     }
 }

@@ -2,21 +2,28 @@ package com.fpmislata.movies.domain.service;
 
 import java.util.List;
 
-import com.fpmislata.movies.dto.MovieDTO;
+import com.fpmislata.movies.domain.entity.CharacterMovie;
+import com.fpmislata.movies.domain.entity.Movie;
 
 public interface MovieService {
 
-    List<MovieDTO> getAll(Integer page, Integer pageSize);
+    List<Movie> getAll(Integer page, Integer pageSize);
     
-    List<MovieDTO> getAll();
+    List<Movie> getAll();
 
-    MovieDTO find(int id);
+    Movie find(int id);
 
-    int getTotalNumberOfRecords();
+    long getTotalNumberOfRecords();
     
-    int create(MovieDTO movieDTO, int directorId, List<Integer> actorIds);
+    Movie create(Movie movie);
     
-    void update(MovieDTO movieDTO, int directorId, List<Integer> actorIds);
+    Movie update(Movie movie);
+    
+    List<Movie> findByDirectorId(int directorId);
     
     void delete(int id);
+    
+    Movie addCharacterMovie(int id, CharacterMovie characterMovie);
+
+    Movie updateCharacterMovie(int id, CharacterMovie characterMovie);
 }

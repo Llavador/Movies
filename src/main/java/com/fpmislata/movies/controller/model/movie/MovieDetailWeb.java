@@ -2,7 +2,8 @@ package com.fpmislata.movies.controller.model.movie;
 
 import java.util.List;
 
-import com.fpmislata.movies.controller.model.actor.ActorListWeb;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fpmislata.movies.controller.model.character.CharacterMovieListWeb;
 import com.fpmislata.movies.controller.model.director.DirectorListWeb;
 
 import lombok.Getter;
@@ -17,7 +18,8 @@ public class MovieDetailWeb {
     private int id;
     private String title;
     private int year;
-    private int runTime;
+    private int runtime;
     private DirectorListWeb director;
-    private List<ActorListWeb> actors;
+    @JsonProperty("characters")
+    private List<CharacterMovieListWeb> characterMovies;
 }

@@ -1,14 +1,14 @@
 package com.fpmislata.movies.domain.service;
 
-import com.fpmislata.movies.dto.ActorDTO;
+import com.fpmislata.movies.domain.entity.Actor;
 
 public interface ActorService {
 
-    int create(ActorDTO actorDTO);
+    int create(Actor actor);
     
-    void update(ActorDTO actorDTO);
+    void update(Actor actor);
 
     void delete(int id);
 
-    ActorDTO find(int id);
+    Actor find(int id);
 }

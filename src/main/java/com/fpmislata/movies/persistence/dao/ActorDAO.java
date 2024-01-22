@@ -1,21 +1,23 @@
 package com.fpmislata.movies.persistence.dao;
 
-import org.springframework.stereotype.Component;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import com.fpmislata.movies.db.DBUtil;
-import com.fpmislata.movies.mapper.ActorMapper;
+//import com.fpmislata.movies.db.DBUtil;
+//import com.fpmislata.movies.mapper.ActorMapper;
 import com.fpmislata.movies.persistence.model.ActorEntity;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+//import java.sql.Connection;
+//import java.sql.ResultSet;
+//import java.sql.SQLException;
+//import java.util.ArrayList;
+//import java.util.List;
+//import java.util.Optional;
 
-@Component
-public class ActorDAO {
-
+@Repository
+//public class ActorDAO {
+public interface ActorDAO extends JpaRepository<ActorEntity, Integer> {
+/*
     public int insert(Connection connection, ActorEntity actorEntity) {
         final String SQL = "INSERT INTO actors (name, birthYear, deathYear) VALUES (?, ?, ?)";
         List<Object> params = new ArrayList<>();
@@ -86,5 +88,5 @@ public class ActorDAO {
             throw new RuntimeException();
         }
     }
-
+*/
 }

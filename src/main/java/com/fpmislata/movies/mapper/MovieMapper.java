@@ -1,79 +1,140 @@
 package com.fpmislata.movies.mapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
+import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
+import com.fpmislata.movies.controller.model.character.CharacterMovieCreateWeb;
 import com.fpmislata.movies.controller.model.movie.MovieCreateWeb;
 import com.fpmislata.movies.controller.model.movie.MovieDetailWeb;
 import com.fpmislata.movies.controller.model.movie.MovieListWeb;
 import com.fpmislata.movies.controller.model.movie.MovieUpdateWeb;
-import com.fpmislata.movies.domain.entity.Actor;
+import com.fpmislata.movies.domain.entity.CharacterMovie;
 import com.fpmislata.movies.domain.entity.Movie;
-import com.fpmislata.movies.dto.ActorDTO;
-import com.fpmislata.movies.dto.MovieDTO;
 import com.fpmislata.movies.persistence.model.MovieEntity;
 
 @Mapper(componentModel = "spring")
 public interface MovieMapper {
-
+/*
     MovieMapper mapper = Mappers.getMapper(MovieMapper.class);
 
-    MovieListWeb toMovieListWeb(MovieDTO movieDTO);
+    MovieListWeb toMovieListWeb(Movie movie);
+    
+    List<MovieListWeb> toMovieListWebs(List<Movie> movies);
 
+    @Mapping(target = "characterMovies", expression = "java(CharacterMovieMapper.mapper.toCharacterMovieListWeb(movie.getCharacterMovies()))")
     @Mapping(target = "director", ignore = true)
-    @Mapping(target = "actors", ignore = true)
-    MovieDetailWeb toMovieDetailWeb(MovieDTO movieDTO);
+    MovieDetailWeb toMovieDetailWeb(Movie movie);
 
     @Mapping(target = "id", expression = "java(resultSet.getInt(\"id\"))")
     @Mapping(target = "title", expression = "java(resultSet.getString(\"title\"))")
     @Mapping(target = "year", expression = "java(resultSet.getInt(\"year\"))")
-    @Mapping(target = "runTime", expression = "java(resultSet.getInt(\"runtime\"))")
-    @Mapping(target = "actorIds", ignore = true)
-    @Mapping(target = "directorId", ignore = true)
+    @Mapping(target = "runtime", expression = "java(resultSet.getInt(\"runtime\"))")
+    @Mapping(target = "actorEntities", ignore = true)
+    @Mapping(target = "directorEntity", ignore = true)
+    @Mapping(target = "characterMovieEntities", ignore = true)
     MovieEntity toMovieEntity(ResultSet resultSet) throws SQLException;
 
-    @Mapping(target = "actorDTOs", ignore = true)
-    @Mapping(target = "directorDTO", ignore = true)
-    MovieDTO toMovieDTO(MovieEntity movieEntity);
+    //@Mapping(target = "director", expression = "java(DirectorMapper.mapper.toDirector(movieEntity.getDirectorEntity()))")
+    //@Mapping(target = "characterMovies", expression = "java(CharacterMovieMapper.mapper.toCharacterMovies(movieEntity.getCharacterMovieEntities()))")
+    @Mapping(target = "characterMovies", ignore = true)
+    @Mapping(target = "director", ignore = true)
+    Movie toMovie(MovieEntity movieEntity);
+
+    @Mapping(target = "director", ignore = true)
+    @Mapping(target = "characterMovies", ignore = true)
+    @IterableMapping(qualifiedByName = "toMovie")
+    @Named("toMovieList")
+    List<Movie> toMovieList(List<MovieEntity> movieEntities);
+
+    @Mapping(target = "director", ignore = true)
+    @Mapping(target = "characterMovies", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    Movie toMovie(MovieCreateWeb movieCreateWeb);
+
+    //@Mapping(target = "directorId", expression = "java(movie.getDirector().getId())")
+    //@Mapping(target = "actorIds", expression = "java(mapActorsToActorIds(movie.getActors()))")
+    @Mapping(target = "directorEntity", expression = "java(movie.getDirector().getId())")
+    @Mapping(target = "actorEntities", expression = "java(mapActorsToActorIds(movie.getActors()))")
+    MovieEntity toMovieEntity(Movie movie);
+
+    @Named("actorToActorIds")
+    default List<Integer> mapActorsToActorIds(List<Actor> actors) {
+        return actors.stream()
+                .map(actor -> actor.getId())
+                .toList();
+    }
     
     @Mapping(target = "director", ignore = true)
     @Mapping(target = "actors", ignore = true)
-    Movie toMovie(MovieDTO movieDTO);
+    Movie toMovie(MovieUpdateWeb movieUpdateWeb);
+*/
 
-    @Mapping(target = "directorDTO", expression = "java(DirectorMapper.mapper.toDirectorDTO(movie.getDirector()))")
-    @Mapping(target = "actorDTOs", expression = "java(mapActorsToActorDTOs(movie.getActors()))")
-    MovieDTO toMovieDTO(Movie movie);
-    
-    @Named("actorDTOsToActorListWebs")
-    default List<ActorDTO> mapActorsToActorDTOs(List<Actor> actors) {
-        return actors.stream()
-                .map(ActorMapper.mapper::toActorDTO)
+    MovieMapper mapper = Mappers.getMapper(MovieMapper.class);
+
+    MovieListWeb toMovieListWeb(Movie movie);
+
+    List<MovieListWeb> toMovieListWebs(List<Movie> movies);
+
+    @Mapping(target = "characterMovies", expression = "java(CharacterMovieMapper.mapper.toCharacterMovieListWeb(movie.getCharacterMovies()))")
+    MovieDetailWeb toMovieDetailWeb(Movie movie);
+
+    /*@Mapping(target = "director", expression = "java(DirectorMapper.mapper.toDirector(movieEntity.getDirectorEntity()))")
+    @Mapping(target = "characterMovies", expression = "java(CharacterMovieMapper.mapper.toCharacterMovies(movieEntity.getCharacterMovieEntities()))")*/
+    @Mapping(target = "director", ignore = true)
+    @Mapping(target = "characterMovies", ignore = true)
+    @Named("toMovie")
+    Movie toMovie(MovieEntity movieEntity);
+
+    @Mapping(target = "director", ignore = true)
+    @Mapping(target = "characterMovies", ignore = true)
+    @IterableMapping(qualifiedByName = "toMovie")
+    @Named("toMovieList")
+    List<Movie> toMovieList(List<MovieEntity> movieEntities);
+
+    @Mapping(target = "director", expression = "java(DirectorMapper.mapper.toDirector(movieEntity.getDirectorEntity()))")
+    @Mapping(target = "characterMovies", expression = "java(CharacterMovieMapper.mapper.toCharacterMovies(movieEntity.getCharacterMovieEntities()))")
+    @Named("toMovieWithDirectorAndCharacterMovies")
+    Movie toMovieWithDirectorAndCharacterMovies(MovieEntity movieEntity);
+
+    @Mapping(target = "director", expression = "java(DirectorMapper.mapper.toDirector(movieCreateWeb.getDirectorId()))")
+    @Mapping(target = "characterMovies", expression = "java(mapCharactersMoviesCreateWebsToCharacterMovies(movieCreateWeb.getCharacters()))")
+    Movie toMovie(MovieCreateWeb movieCreateWeb);
+
+    @Mapping(target = "director", expression = "java(DirectorMapper.mapper.toDirector(movieUpdateWeb.getDirectorId()))")
+    Movie toMovie(MovieUpdateWeb movieUpdateWeb);
+
+    @Named("mapCharactersMoviesCreateWebsToCharacterMovies")
+    default List<CharacterMovie> mapCharactersMoviesCreateWebsToCharacterMovies(List<CharacterMovieCreateWeb> characterMovieCreateWebs) {
+        return characterMovieCreateWebs.stream()
+                .map(characterMovieCreateWeb -> CharacterMovieMapper.mapper.toCharacterMovie(
+                        characterMovieCreateWeb.getActorId(),
+                        characterMovieCreateWeb.getCharacters()))
                 .toList();
     }
 
-    @Mapping(target = "directorDTO", ignore = true)
-    @Mapping(target = "actorDTOs", ignore = true)
+    @Mapping(target = "directorEntity", expression = "java(DirectorMapper.mapper.toDirectorEntity(movie.getDirector()))")
+    @Mapping(target = "characterMovieEntities", expression = "java(CharacterMovieMapper.mapper.toCharacterMovieEntities(movie.getCharacterMovies()))")
+    MovieEntity toMovieEntity(Movie movie);
+
+    /*@Mapping(target = "directorEntity", expression = "java(DirectorMapper.mapper.toDirectorEntity(movie.getDirector()))")
+    @Mapping(target = "characterMovieEntities", expression = "java(mapCharactersMoviesToCharacterMovieEntities(movie.getCharacterMovies()))")
+    MovieEntity toMovieEntity(Movie movie);
+
+    @Named("mapCharactersMoviesToCharacterMovieEntities")
+    default List<CharacterMovieEntity> mapCharactersMoviesToCharacterMovieEntities(List<CharacterMovie> characterMovies) {
+        return characterMovies.stream()
+                .map(CharacterMovieMapper.mapper::toCharacterMovieEntity)
+                .toList();
+    }*/
+
+
     @Mapping(target = "id", ignore = true)
-    MovieDTO toMovieDTO(MovieCreateWeb movieCreateWeb);
-
-    @Mapping(target = "directorId", expression = "java(movieDTO.getDirectorDTO().getId())")
-    @Mapping(target = "actorIds", expression = "java(mapActorsToActorIds(movieDTO.getActorDTOs()))")
-    MovieEntity toMovieEntity(MovieDTO movieDTO);
-
-    @Named("actorToActorIds")
-    default List<Integer> mapActorsToActorIds(List<ActorDTO> actorDTOs) {
-        return actorDTOs.stream()
-                .map(actorDTO -> actorDTO.getId())
-                .toList();
-    }
-    
-    @Mapping(target = "directorDTO", ignore = true)
-    @Mapping(target = "actorDTOs", ignore = true)
-    MovieDTO toMovieDTO(MovieUpdateWeb movieUpdateWeb);
+    @Mapping(target = "characterMovies", ignore = true)
+    void updateMovieFromMovieUpdate(Movie movie, @MappingTarget Movie existingMovie);
 }

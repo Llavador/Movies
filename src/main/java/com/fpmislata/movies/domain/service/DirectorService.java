@@ -1,14 +1,14 @@
 package com.fpmislata.movies.domain.service;
 
-import com.fpmislata.movies.dto.DirectorDTO;
+import com.fpmislata.movies.domain.entity.Director;
 
 public interface DirectorService {
 
-    int create(DirectorDTO directorDTO);
+    int create(Director director);
     
-    void update(DirectorDTO directorDTO);
+    void update(Director director);
     
     void delete(int id);
 
-    DirectorDTO find(int id);
+    Director find(int id);
 }

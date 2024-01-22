@@ -1,21 +1,23 @@
 package com.fpmislata.movies.persistence.dao;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+//import java.sql.Connection;
+//import java.sql.ResultSet;
+//import java.sql.SQLException;
+//import java.util.ArrayList;
+//import java.util.List;
+//import java.util.Optional;
 
-import org.springframework.stereotype.Component;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import com.fpmislata.movies.db.DBUtil;
-import com.fpmislata.movies.mapper.DirectorMapper;
+//import com.fpmislata.movies.db.DBUtil;
+//import com.fpmislata.movies.mapper.DirectorMapper;
 import com.fpmislata.movies.persistence.model.DirectorEntity;
 
-@Component
-public class DirectorDAO {
- 
+@Repository
+//public class DirectorDAO {
+public interface DirectorDAO extends JpaRepository<DirectorEntity, Integer> {
+/* 
     public int insert(Connection connection, DirectorEntity directorEntity) {
         final String SQL = "INSERT INTO directors (name, birthYear, deathYear) VALUES (?, ?, ?)";
         List<Object> params = new ArrayList<>();
@@ -67,4 +69,5 @@ public class DirectorDAO {
             throw new RuntimeException();
         }
     }
+*/
 }
